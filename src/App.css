@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+.ql-toolbar {
+  border-radius: 5px 5px 0 0;
+  border-bottom: none !important;
+}
+
+.ql-container {
+  border-radius: 0 0px 5px 5px;
+}
+
+.ql-editor {
+  font-size: medium;
+  font-family: 'Montserrat', 'Unbounded';
+}
+
   .glow {
     @apply w-20 h-[190px];
     clip-path: ellipse(20% 40% at 50% 50%);

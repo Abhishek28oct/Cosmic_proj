@@ -17,16 +17,15 @@ const IndexHero: React.FC = () => {
           </div>
           <div className="article w-full flex justify-center items-center relative z-2">
             {/* Typography  */}
-            <div className="typo flex flex-col text-center h-fit py-8">
-              <h1 className="text-6xl text-white sm:text-6xl md:text-6xl lg:text-7xl xl:text-7xl">
+            <div className="typo font-[Unbounded]  flex flex-col text-center h-fit py-8">
+              <p className="text-5xl text-white sm:text-5xl md:text-5xl lg:text-6xl xl:text-6xl">
                 Explore the Boundless Cosmos
-              </h1>
-              <h1 className="text-4xl text-white sm:text-3xl md:text-4xl lg:text-5xl">
+              </p>
+              <p className="text-4xl text-white sm:text-3xl md:text-4xl lg:text-5xl">
                 Step Beyond the Horizon
-              </h1>
+              </p>
               <p className="text-xl text-white font-[Montserrat]">
                 Discover the mysteries of the universe with a single click.
-                Let’s unravel the stars together.
               </p>
             </div>
           </div>

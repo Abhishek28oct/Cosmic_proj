@@ -57,7 +57,7 @@ export const Profile=()=>{
         <Stats />
         
         {/* Submissions Container Starts */}
-        <div className="yoursub flex flex-col bg-zinc-900 ring-1 ring-zinc-800 rounded-xl h-fit overflow-hidden ">
+        <div className="yoursub flex flex-col bg-purple-800/15 ring-1 ring-zinc-800 rounded-xl h-fit overflow-hidden ">
             <div className="sub-title text-white p-4 font-[Unbounded] bg-black/80 w-full h-fit">Your Submissions</div>
             
             {/* Submissions List Container */}
@@ -72,7 +72,7 @@ export const Profile=()=>{
         {/* Submissions Container Ends */}
         
         {/* Liked Container Starts */}
-        <div className="yoursub flex flex-col bg-zinc-900 ring-1 ring-zinc-800 rounded-xl h-fit overflow-hidden my-8">
+        <div className="yoursub flex flex-col bg-purple-800/15 ring-1 ring-zinc-800 rounded-xl h-fit overflow-hidden my-8">
             <div className="sub-title text-white p-4 font-[Unbounded] bg-black/80 w-full h-fit">Your Liked Blogs</div>
             
             {/* Submissions List Container */}

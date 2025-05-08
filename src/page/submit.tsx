@@ -1,20 +1,25 @@
+import React, { useState } from "react";
 import Footer from "../components/footer";
-
-import '../App.css';
+import "../App.css";
 import BlogNav from "../components/blogComponents/blognav";
-import MainBlog from "../components/blogComponents/mainblog";
+import PreviewBlog from "../components/submitpage/PreviewBlog";
+import Instructions from "../components/submitpage/Instructions";
+import Accordion from "../components/submitpage/Accordion";
 
-import DynBlog from "../components/submitpage/dynamicBlog"
+export const Submit = () => {
+    const [value, setValue] = useState<string>("");
+    const title = "";
+    const content = "";
 
-export const Submit=()=> {
     return (
-      <>
-        <div className="bg-black py-[1px]">  
-        <BlogNav/>
-        <DynBlog />
-        <Footer />
-  </div>
-</>
-
-    )
-}
+        <>
+            <div className="bg-black py-[1px] ">
+                <BlogNav />        
+                <Instructions />
+                <PreviewBlog />
+                <Accordion />
+                <Footer />
+            </div>
+        </>
+    );
+};

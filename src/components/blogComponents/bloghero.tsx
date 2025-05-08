@@ -18,8 +18,8 @@ const BlogHero: React.FC = () => {
                 </nav>
                 {/* Hero Section Content */}
                 <div className="hero-cont container mx-auto text-center p-5 font-[Hanken Grotesk]">
-                <div className="hero-title h-full flex flex-col w-full justify-center items-center mb-5">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                <div className="hero-title font-[Unbounded]  h-full flex flex-col w-full justify-center items-center mb-5">
+                    <h1 className="text-3xl md:text-5xl font-bold mb-6">
                     Stay Updated: The Latest Space News, Astronomical Events, and More...
                     </h1>
                     <p className="text-lg text-gray-400 mb-10">
