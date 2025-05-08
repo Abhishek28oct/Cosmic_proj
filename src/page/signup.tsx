@@ -92,7 +92,7 @@ export const Signup = () => {
       <div className="bg-gradient-to-br from-slate-950/85 to-slate-950 flex items-center justify-center min-h-screen">
         <div className="w-full max-w-[450px] m-4 glass text-white rounded-lg p-8 font-[Montserrat] text-sm">
           <div className="welcome flex flex-col items-start">
-            <h2 className="text-3xl font-bold mb-4">Create Your Account</h2>
+            <h2 className="text-3xl font-bold mb-4">Join Cosmic Horizons</h2>
             <p className="text-gray-300 mb-6">
               Already have an account?
               <a
