@@ -52,10 +52,32 @@ const Navbar: React.FC = () => {
             </div>
             <div className="nav-links hidden md:flex space-x-6">
                 <Link to="/" className="text-gray-300 hover:text-purple-400 transition-colors">Home</Link>
-                <Link to="/blogs" className="text-gray-300 hover:text-purple-400 transition-colors">Blogs</Link>
+                <div className="relative group">
+                    <button className="text-gray-300 hover:text-purple-400 transition-colors flex items-center">
+                        Blogs
+                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div className="absolute left-0 mt-2 w-48 bg-gray-900 rounded-lg shadow-lg border border-gray-700 hidden group-hover:block z-50">
+                        <Link to="/blogs" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
+                            Read Blogs
+                        </Link>
+                        <Link to="/create-blog" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
+                            Write Blog
+                        </Link>
+                    </div>
+                </div>
                 <Link to="/news" className="text-gray-300 hover:text-purple-400 transition-colors">News</Link>
                 <Link to="/isro" className="text-gray-300 hover:text-purple-400 transition-colors">ISRO Updates</Link>
+                <Link to="/space-weather" className="text-gray-300 hover:text-purple-400 transition-colors">Space Weather</Link>
                 <Link to="/about" className="text-gray-300 hover:text-purple-400 transition-colors">About</Link>
+                <Link
+                    to="/celestial-events"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                >
+                    Celestial Events
+                </Link>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -127,22 +149,31 @@ const Navbar: React.FC = () => {
                         <Link to="/" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
                             Home
                         </Link>
+                        <div className="border-t border-gray-700 my-2"></div>
                         <Link to="/blogs" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
-                            Blogs
+                            Read Blogs
                         </Link>
-                        {isAuthenticated && (
-                            <Link to="/create-blog" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
-                                Write a Blog
-                            </Link>
-                        )}
+                        <Link to="/create-blog" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
+                            Write Blog
+                        </Link>
+                        <div className="border-t border-gray-700 my-2"></div>
                         <Link to="/news" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
                             News
                         </Link>
                         <Link to="/isro" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
                             ISRO Updates
                         </Link>
+                        <Link to="/space-weather" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
+                            Space Weather
+                        </Link>
                         <Link to="/about" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
                             About
+                        </Link>
+                        <Link
+                            to="/celestial-events"
+                            className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400"
+                        >
+                            Celestial Events
                         </Link>
                         {isAuthenticated ? (
                             <>

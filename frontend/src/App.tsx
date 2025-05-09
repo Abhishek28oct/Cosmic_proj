@@ -26,6 +26,8 @@ import UserGuide from './page/user-guide'
 import { Blogs } from './page/blogs'
 import { BlogPost } from './page/blog-post'
 import { CreateBlog } from './page/create-blog'
+import { SpaceWeather } from './components/SpaceWeather'
+import { CelestialEvents } from './components/CelestialEvents'
 
 // Get the Google Client ID from environment variables
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -35,7 +37,7 @@ console.log('Google Client ID:', GOOGLE_CLIENT_ID);
 
 function App() {
   return (
-    <>
+    <div className="min-h-screen bg-gray-100">
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
         <BrowserRouter>
           <ToastContainer
@@ -74,10 +76,16 @@ function App() {
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/blog/:id" element={<BlogPost />} />
             <Route path="/create-blog" element={<CreateBlog />} />
+            <Route path="/space-weather" element={
+              <div className="container mx-auto py-8">
+                <SpaceWeather />
+              </div>
+            } />
+            <Route path="/celestial-events" element={<CelestialEvents />} />
           </Routes>
         </BrowserRouter>
       </GoogleOAuthProvider>
-    </>
+    </div>
   )
 }
 

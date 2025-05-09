@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { GoogleLogin } from '@react-oauth/google';
+import api from '../utils/api';
 
 export const Signin = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export const Signin = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await api.post('/api/auth/login', {
         email: formData.email,
         password: formData.password,
         rememberMe: formData.rememberMe
@@ -44,7 +44,17 @@ export const Signin = () => {
       // Redirect to home page
       navigate('/');
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'An error occurred during sign in';
+      console.error('Sign-in error:', err);
+      let errorMessage = 'An error occurred during sign in';
+      
+      if (err.code === 'ERR_NETWORK') {
+        errorMessage = 'Unable to connect to the server. Please check your internet connection.';
+      } else if (err.response?.status === 401) {
+        errorMessage = 'Invalid email or password';
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -54,13 +64,9 @@ export const Signin = () => {
 
   const handleGoogleSuccess = async (credentialResponse: any) => {
     try {
-      console.log('Google response:', credentialResponse); // Debug log
-      
-      const response = await axios.post('http://localhost:5000/api/auth/google', {
+      const response = await api.post('/api/auth/google', {
         credential: credentialResponse.credential
       });
-
-      console.log('Backend response:', response.data); // Debug log
 
       const { token, user } = response.data;
       
@@ -71,21 +77,18 @@ export const Signin = () => {
       toast.success("Welcome back! Successfully signed in with Google.");
       navigate('/');
     } catch (err: any) {
-      console.error('Google sign-in error:', err); // Debug log
       const errorMessage = err.response?.data?.message || 'Error signing in with Google';
       toast.error(errorMessage);
     }
   };
 
   const handleGoogleError = () => {
-    console.error('Google sign-in failed'); // Debug log
     toast.error("Google sign in was unsuccessful");
   };
 
   const handleAppleSignIn = async () => {
     try {
-      // Initialize Apple Sign In
-      const response = await axios.post('http://localhost:5000/api/auth/apple');
+      const response = await api.post('/api/auth/apple');
       const { url } = response.data;
       
       // Redirect to Apple's sign-in page
@@ -125,7 +128,7 @@ export const Signin = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="mb-4">
               <label htmlFor="email" className="block text-sm font-medium mb-1">
                 Email
@@ -138,6 +141,7 @@ export const Signin = () => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
+                autoComplete="email"
               />
             </div>
             <div className="mb-4">
@@ -152,10 +156,11 @@ export const Signin = () => {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
+                autoComplete="current-password"
               />
             </div>
             
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-4">
               <div className="inline-flex items-center">
                 <label
                   className="flex items-center cursor-pointer relative"

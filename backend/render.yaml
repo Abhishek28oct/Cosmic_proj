@@ -10,4 +10,6 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: FRONTEND_URL
-        value: https://your-netlify-app.netlify.app 
+        value: https://your-netlify-app.netlify.app
+    healthCheckPath: /health
+    autoDeploy: true 
