@@ -29,6 +29,12 @@ export const CreateBlog = () => {
         return;
       }
 
+      if (!formData.title || !formData.content || !formData.summary) {
+        toast.error('Please fill in all required fields');
+        setLoading(false);
+        return;
+      }
+
       const response = await axios.post('http://localhost:5000/api/blogs', {
         ...formData,
         tags: formData.tags.split(',').map(tag => tag.trim())
@@ -58,7 +64,7 @@ export const CreateBlog = () => {
             <div className="space-y-6">
               <div>
                 <label htmlFor="title" className="block text-sm font-medium mb-2">
-                  Title
+                  Title *
                 </label>
                 <input
                   type="text"
@@ -72,7 +78,7 @@ export const CreateBlog = () => {
 
               <div>
                 <label htmlFor="summary" className="block text-sm font-medium mb-2">
-                  Summary
+                  Summary *
                 </label>
                 <textarea
                   id="summary"
@@ -86,7 +92,7 @@ export const CreateBlog = () => {
 
               <div>
                 <label htmlFor="content" className="block text-sm font-medium mb-2">
-                  Content
+                  Content *
                 </label>
                 <ReactQuill
                   theme="snow"
@@ -133,9 +139,9 @@ export const CreateBlog = () => {
                 />
               </div>
 
-              <div>
+              <div className="bg-purple-500/20 p-4 rounded-lg">
                 <label htmlFor="status" className="block text-sm font-medium mb-2">
-                  Status
+                  Publication Status *
                 </label>
                 <select
                   id="status"
@@ -143,9 +149,12 @@ export const CreateBlog = () => {
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                   className="w-full px-4 py-2 bg-gray-800/50 text-white rounded-md ring-1 ring-gray-700 focus:ring-purple-500"
                 >
-                  <option value="draft">Draft</option>
-                  <option value="published">Published</option>
+                  <option value="draft">Save as Draft (not visible to others)</option>
+                  <option value="published">Publish Now (visible to everyone)</option>
                 </select>
+                <p className="mt-2 text-sm text-purple-300">
+                  Choose "Publish Now" to make your blog post visible to everyone. Drafts are only visible to you.
+                </p>
               </div>
 
               <div className="flex justify-end space-x-4">

@@ -8,9 +8,7 @@ import articleRoutes from './routes/articles.js';
 import isroRoutes from './routes/isro.js';
 import blogRoutes from './routes/blogs.js';
 import spaceWeatherRoutes from './routes/spaceWeather.js';
-import celestialEventRoutes from './routes/celestialEvents.js';
 import SpaceWeather from './models/SpaceWeather.js';
-import CelestialEvent from './models/CelestialEvent.js';
 
 // Load environment variables
 dotenv.config();
@@ -41,142 +39,30 @@ app.use((req, res, next) => {
 });
 
 // Initialize space weather data
-async function initializeSpaceWeather() {
+const initializeSpaceWeather = async () => {
   try {
-    // Clear existing space weather data
     await SpaceWeather.deleteMany({});
-    console.log('Cleared existing space weather data');
-    
-    // Create initial space weather record
-    const initialWeather = new SpaceWeather({
+    const weather = new SpaceWeather({
       date: new Date(),
-      solarFlareIntensity: 2,
-      geomagneticStormLevel: 'None',
-      kpIndex: 2,
+      solarFlareIntensity: 'M1',
+      geomagneticStormLevel: 'G1',
+      kpIndex: 3,
       solarWindSpeed: 400,
       prediction: {
-        solarFlareProbability: 0.2,
-        geomagneticStormProbability: 0.1,
-        visibilityScore: 8
+        solarFlareProbability: 0.3,
+        geomagneticStormProbability: 0.2,
+        visibilityScore: 0.8
       }
     });
-    await initialWeather.save();
+    await weather.save();
     console.log('Initial space weather data created');
   } catch (error) {
     console.error('Error initializing space weather data:', error);
   }
-}
+};
 
-// Initialize celestial events data
-async function initializeCelestialEvents() {
-  try {
-    // Clear existing events
-    await CelestialEvent.deleteMany({});
-    console.log('Cleared existing celestial events');
-    
-    // Create sample celestial events
-    const sampleEvents = [
-      {
-        eventType: 'meteor_shower',
-        name: 'Perseid Meteor Shower',
-        startDate: new Date('2024-07-17'),
-        endDate: new Date('2024-08-24'),
-        peakDate: new Date('2024-08-12'),
-        intensity: 8,
-        visibility: 7,
-        location: {
-          type: 'Point',
-          coordinates: [0, 0]
-        },
-        description: 'One of the most popular meteor showers of the year, known for its bright and fast meteors.',
-        prediction: {
-          optimalViewingTimes: [
-            {
-              date: new Date('2024-08-12T02:00:00Z'),
-              score: 8.5,
-              conditions: {
-                moonPhase: 15,
-                lightPollution: 3,
-                cloudCover: 20
-              }
-            }
-          ],
-          intensityForecast: {
-            predicted: 8.2,
-            confidence: 0.85
-          }
-        }
-      },
-      {
-        eventType: 'planetary_alignment',
-        name: 'Jupiter-Saturn Conjunction',
-        startDate: new Date('2024-06-15'),
-        endDate: new Date('2024-06-20'),
-        peakDate: new Date('2024-06-17'),
-        intensity: 6,
-        visibility: 8,
-        location: {
-          type: 'Point',
-          coordinates: [0, 0]
-        },
-        description: 'A rare alignment of Jupiter and Saturn in the night sky.',
-        prediction: {
-          optimalViewingTimes: [
-            {
-              date: new Date('2024-06-17T20:00:00Z'),
-              score: 9.0,
-              conditions: {
-                moonPhase: 5,
-                lightPollution: 4,
-                cloudCover: 10
-              }
-            }
-          ],
-          intensityForecast: {
-            predicted: 6.5,
-            confidence: 0.9
-          }
-        }
-      },
-      {
-        eventType: 'meteor_shower',
-        name: 'Geminid Meteor Shower',
-        startDate: new Date('2024-12-04'),
-        endDate: new Date('2024-12-17'),
-        peakDate: new Date('2024-12-14'),
-        intensity: 9,
-        visibility: 8,
-        location: {
-          type: 'Point',
-          coordinates: [0, 0]
-        },
-        description: 'One of the most reliable meteor showers, known for its bright and colorful meteors.',
-        prediction: {
-          optimalViewingTimes: [
-            {
-              date: new Date('2024-12-14T02:00:00Z'),
-              score: 9.5,
-              conditions: {
-                moonPhase: 10,
-                lightPollution: 3,
-                cloudCover: 15
-              }
-            }
-          ],
-          intensityForecast: {
-            predicted: 9.0,
-            confidence: 0.95
-          }
-        }
-      }
-    ];
-
-    const createdEvents = await CelestialEvent.insertMany(sampleEvents);
-    console.log('Created celestial events:', createdEvents.length);
-  } catch (error) {
-    console.error('Error initializing celestial events:', error);
-  }
-}
+// Initialize data
+initializeSpaceWeather();
 
 // MongoDB Connection with retry logic
 const connectDB = async () => {
@@ -184,9 +70,6 @@ const connectDB = async () => {
     const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/cosmic-horizons';
     await mongoose.connect(mongoURI);
     console.log('Connected to MongoDB');
-    // Initialize data after successful connection
-    await initializeSpaceWeather();
-    await initializeCelestialEvents();
   } catch (err) {
     console.error('MongoDB connection error:', err);
     // Retry connection after 5 seconds
@@ -203,7 +86,6 @@ app.use('/api/articles', articleRoutes);
 app.use('/api/isro', isroRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/space-weather', spaceWeatherRoutes);
-app.use('/api/celestial-events', celestialEventRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

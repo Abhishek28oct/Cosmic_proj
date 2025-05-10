@@ -3,17 +3,17 @@ import mongoose from 'mongoose';
 const spaceWeatherSchema = new mongoose.Schema({
   date: {
     type: Date,
-    required: true
+    required: true,
+    default: Date.now
   },
   solarFlareIntensity: {
-    type: Number,
+    type: String,
     required: true,
-    min: 0,
-    max: 10
+    enum: ['A', 'B', 'C', 'M1', 'M2', 'M3', 'M4', 'M5', 'X1', 'X2', 'X3', 'X4', 'X5']
   },
   geomagneticStormLevel: {
     type: String,
-    enum: ['None', 'Minor', 'Moderate', 'Strong', 'Severe'],
+    enum: ['G1', 'G2', 'G3', 'G4', 'G5', 'None'],
     required: true
   },
   kpIndex: {
@@ -24,12 +24,28 @@ const spaceWeatherSchema = new mongoose.Schema({
   },
   solarWindSpeed: {
     type: Number,
-    required: true
+    required: true,
+    min: 0
   },
   prediction: {
-    solarFlareProbability: Number,
-    geomagneticStormProbability: Number,
-    visibilityScore: Number
+    solarFlareProbability: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 1
+    },
+    geomagneticStormProbability: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 1
+    },
+    visibilityScore: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 1
+    }
   }
 }, {
   timestamps: true

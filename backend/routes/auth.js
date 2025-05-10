@@ -5,8 +5,8 @@ import { auth } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Register
-router.post('/register', async (req, res) => {
+// Register/Signup
+router.post('/signup', async (req, res) => {
   try {
     const { username, email, password } = req.body;
     console.log('Registration attempt:', { username, email }); // Debug log

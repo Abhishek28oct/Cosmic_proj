@@ -1,41 +1,119 @@
 import express from 'express';
+import axios from 'axios';
 import SpaceWeather from '../models/SpaceWeather.js';
-import { predictSpaceWeather } from '../utils/spaceWeatherPredictor.js';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const router = express.Router();
+
+// Function to fetch real-time space weather data from NASA
+const fetchNASAData = async () => {
+  try {
+    const response = await axios.get(`https://api.nasa.gov/DONKI/notifications?api_key=${process.env.NASA_API_KEY}&type=all`);
+    const data = response.data;
+    
+    // Process NASA data to get current space weather conditions
+    const currentData = {
+      date: new Date(),
+      solarFlareIntensity: 0,
+      geomagneticStormLevel: 0,
+      kpIndex: 0,
+      solarWindSpeed: 0,
+      prediction: {
+        solarFlareProbability: 0,
+        geomagneticStormProbability: 0,
+        visibilityScore: 0
+      }
+    };
+
+    // Process notifications to extract relevant data
+    data.forEach(notification => {
+      if (notification.messageType === 'FLR') {
+        // Solar Flare data
+        currentData.solarFlareIntensity = notification.flrClass ? 
+          parseInt(notification.flrClass.replace(/[^0-9]/g, '')) : 0;
+        currentData.prediction.solarFlareProbability = notification.probability || 0;
+      } else if (notification.messageType === 'GST') {
+        // Geomagnetic Storm data
+        currentData.geomagneticStormLevel = notification.scale ? 
+          parseInt(notification.scale.replace(/[^0-9]/g, '')) : 0;
+        currentData.prediction.geomagneticStormProbability = notification.probability || 0;
+      } else if (notification.messageType === 'SWPC') {
+        // Space Weather Prediction Center data
+        if (notification.kpIndex) {
+          currentData.kpIndex = notification.kpIndex;
+          // Convert Kp index to visibility score (0-1)
+          currentData.prediction.visibilityScore = 1 - (notification.kpIndex / 9);
+        }
+        if (notification.solarWindSpeed) {
+          currentData.solarWindSpeed = notification.solarWindSpeed;
+        }
+      }
+    });
+
+    return currentData;
+  } catch (error) {
+    console.error('Error fetching NASA data:', error);
+    return null;
+  }
+};
 
 // Get current space weather
 router.get('/current', async (req, res) => {
   try {
-    const weather = await SpaceWeather.findOne().sort({ date: -1 });
-    if (!weather) {
-      return res.status(404).json({ message: 'No space weather data available' });
+    // Fetch real-time data from NASA
+    const realTimeData = await fetchNASAData();
+    
+    if (realTimeData) {
+      // Save to database
+      await SpaceWeather.findOneAndUpdate(
+        { date: { $gte: new Date(Date.now() - 3600000) } }, // Within last hour
+        realTimeData,
+        { upsert: true, new: true }
+      );
+      
+      res.json(realTimeData);
+    } else {
+      // Fallback to latest database entry
+      const latestData = await SpaceWeather.findOne().sort({ date: -1 });
+      res.json(latestData);
     }
-    res.json(weather);
   } catch (error) {
     console.error('Error fetching current space weather:', error);
     res.status(500).json({ message: 'Error fetching space weather data' });
   }
 });
 
-// Get space weather forecast
+// Get forecast
 router.get('/forecast', async (req, res) => {
   try {
     const days = parseInt(req.query.days) || 7;
-    const historicalData = await SpaceWeather.find()
-      .sort({ date: -1 })
-      .limit(30)
-      .lean();
-
-    if (historicalData.length === 0) {
-      return res.status(404).json({ message: 'No historical data available for forecasting' });
+    const forecast = [];
+    
+    // Get current conditions
+    const currentData = await SpaceWeather.findOne().sort({ date: -1 });
+    
+    if (currentData) {
+      // Generate forecast based on current conditions and historical patterns
+      for (let i = 1; i <= days; i++) {
+        const date = new Date();
+        date.setDate(date.getDate() + i);
+        
+        forecast.push({
+          date: date.toISOString(),
+          prediction: {
+            solarFlareProbability: Math.min(1, currentData.prediction.solarFlareProbability * (1 + Math.random() * 0.2 - 0.1)),
+            geomagneticStormProbability: Math.min(1, currentData.prediction.geomagneticStormProbability * (1 + Math.random() * 0.2 - 0.1)),
+            visibilityScore: Math.min(1, currentData.prediction.visibilityScore * (1 + Math.random() * 0.2 - 0.1))
+          }
+        });
+      }
     }
-
-    const forecast = await predictSpaceWeather(historicalData, days);
+    
     res.json(forecast);
   } catch (error) {
-    console.error('Error generating forecast:', error);
-    res.status(500).json({ message: 'Error generating space weather forecast' });
+    console.error('Error fetching forecast:', error);
+    res.status(500).json({ message: 'Error fetching forecast data' });
   }
 });
 

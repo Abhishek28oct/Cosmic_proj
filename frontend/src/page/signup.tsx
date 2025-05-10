@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from 'react-toastify';
+import api from '../utils/api';
 
 interface PasswordStrength {
   score: number;
@@ -59,14 +59,25 @@ export const Signup = () => {
       return;
     }
 
+    // Validate password strength
+    if (passwordStrength.score < 3) {
+      setError("Password is too weak. Please use a stronger password.");
+      toast.error("Password is too weak. Please use a stronger password.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', {
+      console.log('Attempting signup with:', { username: formData.username, email: formData.email });
+      
+      const response = await api.post('/api/auth/signup', {
         username: formData.username,
         email: formData.email,
         password: formData.password
       });
+
+      console.log('Signup response:', response.data);
 
       const { token, user } = response.data;
       
@@ -79,6 +90,7 @@ export const Signup = () => {
       // Redirect to home page
       navigate('/');
     } catch (err: any) {
+      console.error('Signup error:', err);
       const errorMessage = err.response?.data?.message || 'An error occurred during sign up';
       setError(errorMessage);
       toast.error(errorMessage);

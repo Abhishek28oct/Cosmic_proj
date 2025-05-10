@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div className="absolute left-0 mt-2 w-48 bg-gray-900 rounded-lg shadow-lg border border-gray-700 hidden group-hover:block z-50">
+                    <div className="absolute left-0 mt-2 w-48 bg-gray-900 rounded-lg shadow-lg border border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out z-50">
                         <Link to="/blogs" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
                             Read Blogs
                         </Link>
@@ -72,12 +72,6 @@ const Navbar: React.FC = () => {
                 <Link to="/isro" className="text-gray-300 hover:text-purple-400 transition-colors">ISRO Updates</Link>
                 <Link to="/space-weather" className="text-gray-300 hover:text-purple-400 transition-colors">Space Weather</Link>
                 <Link to="/about" className="text-gray-300 hover:text-purple-400 transition-colors">About</Link>
-                <Link
-                    to="/celestial-events"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                    Celestial Events
-                </Link>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -168,12 +162,6 @@ const Navbar: React.FC = () => {
                         </Link>
                         <Link to="/about" className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400">
                             About
-                        </Link>
-                        <Link
-                            to="/celestial-events"
-                            className="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400"
-                        >
-                            Celestial Events
                         </Link>
                         {isAuthenticated ? (
                             <>
